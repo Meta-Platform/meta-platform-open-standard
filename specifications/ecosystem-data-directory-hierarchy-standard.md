@@ -1,5 +1,24 @@
 # Ecosystem Data Directory Hierarchy Standard
 
+## Estrutura de Diretórios
+
+A estrutura de diretórios do ecossistema é organizada da seguinte forma:
+
+```
+ecosystem-root/
+├── binaries/              # Binários necessários para execução de pacotes
+├── config-files/          # Arquivos de configuração do ecossistema
+│   └── ecosystem-defaults.json
+├── npm-dependencies/      # Dependências NPM mínimas
+├── environments/          # Ambientes de execução isolados por pacote
+├── sockets/               # Sockets Unix para comunicação IPC
+├── supervisor-sockets/    # Sockets de supervisão via gRPC
+├── executables/           # Executáveis instalados do ecossistema
+├── repos/                 # Repositórios instalados
+├── sources.json           # Informações sobre repositórios disponíveis
+└── repositories.json      # Registro de repositórios instalados
+```
+
 * **binaries**: diretório que contém todos os binários necessários para que um pacote do ecossistema possa ser executado corretamente. É utilizado em ambientes onde o sistema operacional não fornece essas dependências por padrão.
 
 * **config-files**: contém arquivos de configuração que padronizam a execução dos pacotes dentro de um ecossistema.
