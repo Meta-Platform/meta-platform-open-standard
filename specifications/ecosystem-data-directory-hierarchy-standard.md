@@ -44,3 +44,13 @@ ecosystem-root/
 
 * **repositories.json**: metadado que registra todos os repositórios instalados e suas respectivas aplicações. Vale lembrar que, quando um repositório é instalado, ele é armazenado no diretório **repos**.
 
+---
+
+## Especificações relacionadas
+
+- [Environment Runtime Standard](./environment-runtime-standard.md) — o que roda dentro de `environments/`.
+- [Supervisor Socket Standard](./supervisor-socket-standard.md) — `supervisor-sockets/` (gRPC sobre Unix socket).
+- [Repository Metadata Standard](./repository-metadata-standard.md) — `repos/`, `sources.json`, `repositories.json`.
+- [Ecosystem Installation Profile Standard](./ecosystem-installation-profile-standard.md) — como o `EcosystemData` é montado.
+- Conceito: [Runtime Environment](../concepts/runtime-environment.md).
+
