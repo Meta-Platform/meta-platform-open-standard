@@ -45,7 +45,10 @@ layer `EssentialTaskLoaders.layer`):
 | `command-application` | `command-application.lib` | Instancia uma aplicação de linha de comando. |
 
 Detalhes e exemplos de parâmetros em
-[Tipos de Object Loader](../concepts/tipos-de-object-loader.md).
+[Tipos de Object Loader](../concepts/tipos-de-object-loader.md). Para o passo a
+passo de **como criar um novo object loader / task loader**, veja o
+[Guia: como criar e usar um Object Loader](https://github.com/Meta-Platform/meta-platform-essential-repository/blob/main/Runtime.Module/Executor.layer/task-executor.lib/docs/guia-criar-object-loader.md)
+(implementação de referência).
 
 ## Ciclo de vida das tasks
 
