@@ -93,3 +93,20 @@ Cliente/servidor no
 (`CreateBinaryInterfaceViaSocket`) e no `instance-supervisor.cli` /
 `supervisor.lib` do
 [essential-repository](https://github.com/Meta-Platform/meta-platform-essential-repository).
+
+## Fonte canônica e cópias de implementação
+
+A **fonte canônica** do contrato RPC é o arquivo
+[`proto/package_executor_rpc.proto`](../proto/package_executor_rpc.proto) deste
+repositório (Open Standard). As demais ocorrências do `.proto` no ecossistema são
+**cópias de implementação/runtime**, derivadas do canônico:
+
+- `meta-platform-package-executor-command-line/src/Helpers/CommunicationInterface/IDL/PackageExecutorRPCSpec.proto`
+  — servidor/cliente do Package Executor;
+- `essential-repository/Commons.Module/Libraries.layer/supervisor.lib/IDL/PackageExecutorRPCSpec.proto`
+  — cliente de supervisão.
+
+**Política de sincronização:** qualquer alteração no contrato RPC deve começar no
+Open Standard (`package_executor_rpc.proto`) e só então ser propagada para as
+cópias de implementação. Enquanto não houver automação de sincronização, o
+processo é **manual** e deve ser validado por `diff` entre o canônico e cada cópia.

@@ -38,7 +38,9 @@ para bibliotecas nativas:
 Todo package declara um **namespace** em `metadata/package.json`. Os prefixos têm
 significado fixo:
 
-- `@/` — referência a um package **dentro do repositório** (ex.:
+- `@/` — referência a um package por **namespace** no conjunto de repositórios
+  instalados. A declaração normalmente aparece dentro de um repositório, mas a
+  resolução acontece globalmente no `EcosystemData` (ex.:
   `@/repository-manager.cli`).
 - `@@/` — referência a uma **instância/serviço** dentro do mesmo contexto de
   execução (ex.: `@@/server-service`).

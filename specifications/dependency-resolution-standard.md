@@ -13,7 +13,7 @@ que repositórios sejam instalados em qualquer lugar do `EcosystemData`.
 
 | Prefixo | Significado | Exemplo |
 |---------|-------------|---------|
-| `@/` | Package dentro do conjunto de repositórios instalados | `@/json-file-utilities.lib` |
+| `@/` | Package por namespace no conjunto de repositórios instalados (declarado dentro de um repositório, resolvido globalmente no `EcosystemData`) | `@/json-file-utilities.lib` |
 | `@@/` | Instância/serviço dentro do mesmo contexto de execução | `@@/server-service` |
 | `@//` | Referência interna de boot do próprio package | `@//command-group`, `@//endpoint-group` |
 

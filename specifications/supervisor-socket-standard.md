@@ -48,7 +48,7 @@ supervisor status instance-manager.sock # status do processo
 supervisor tasks  instance-manager.sock # tasks em execução
 supervisor log    instance-manager.sock # streaming de log
 supervisor kill   instance-manager.sock # encerra o processo
-supervisor show task 46 --socket instance-manager.sock
+supervisor show task 46 instance-manager.sock
 ```
 
 ## Estados observáveis

@@ -16,8 +16,10 @@ package.
 { "namespace": "@/repository-manager.cli" }
 ```
 
-Prefixos de namespace: `@/` (package no repositório), `@@/` (instância/serviço no
-mesmo contexto de execução), `@//` (referência interna de boot). Ver
+Prefixos de namespace: `@/` (package por namespace no conjunto de repositórios
+instalados — declarado dentro de um repositório, resolvido globalmente no
+`EcosystemData`), `@@/` (instância/serviço no mesmo contexto de execução), `@//`
+(referência interna de boot). Ver
 [Dependency Resolution Standard](./dependency-resolution-standard.md).
 
 > Não confundir com o `package.json` da **raiz** do package (identidade e
