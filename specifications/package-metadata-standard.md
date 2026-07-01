@@ -50,6 +50,13 @@ Pacotes de aplicação/web (`.app`, `.webapp`, `.webgui`, `.webservice`) usam um
 `boot.json` com `params`, `services` e `endpoints` (ver
 [Executable Manifest Standard](./executable-manifest-standard.md)).
 
+Pacotes desktop (`.desktopapp`) usam um `boot.json` com a seção `windows`, que
+declara as janelas [Electron](https://www.electronjs.org/) a abrir. Tipicamente
+o `.desktopapp` **combina** `services`/`endpoints` (o backend/web local, como um
+webapp) com `windows` (a janela que faz `loadURL` desse servidor local); também
+suporta `loadFile` de HTML estático. Ver
+[Executable Manifest Standard](./executable-manifest-standard.md).
+
 ## `command-group.json` — packages `.cli`
 
 A **árvore de comandos** da CLI.
@@ -97,11 +104,11 @@ Valores de inicialização específicos do package, entregues aos handlers como
 
 ## Resumo por tipo
 
-| Arquivo | `.lib` | `.cli` | `.service` | `.app`/`.webapp`/`.webgui`/`.webservice` |
-|---------|:------:|:------:|:----------:|:----------------------------------------:|
-| `package.json` (namespace) | ✅ | ✅ | ✅ | ✅ |
-| `boot.json` | — | ✅ | ✅ (services) | ✅ (params/services/endpoints) |
-| `command-group.json` | — | ✅ | — | — |
-| `services.json` | — | — | ✅ | — |
-| `endpoint-group.json` | — | — | — | ✅ (web) |
-| `startup-params.json` | — | opc. | opc. | opc. |
+| Arquivo | `.lib` | `.cli` | `.service` | `.app`/`.webapp`/`.webgui`/`.webservice` | `.desktopapp` |
+|---------|:------:|:------:|:----------:|:----------------------------------------:|:-------------:|
+| `package.json` (namespace) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `boot.json` | — | ✅ | ✅ (services) | ✅ (params/services/endpoints) | ✅ (windows) |
+| `command-group.json` | — | ✅ | — | — | — |
+| `services.json` | — | — | ✅ | — | — |
+| `endpoint-group.json` | — | — | — | ✅ (web) | — |
+| `startup-params.json` | — | opc. | opc. | opc. | opc. |

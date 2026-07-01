@@ -44,9 +44,11 @@ O **tipo do executável** (`appType` em `applications.json`) está ligado ao
 |-----------|--------------------------|---------|
 | `CLI` | `.cli` | Comando de linha de comando. |
 | `APP` | `.app`, `.webapp` | Aplicação/instância do ecossistema (pode subir serviços e endpoints web). |
+| `DESKTOP` | `.desktopapp` | Aplicação desktop; abre uma ou mais janelas Electron encapsulando uma app web local (`loadURL`) ou HTML local (`loadFile`). |
 
 > Os sufixos de package (`.lib`, `.cli`, `.service`, `.webservice`, `.webgui`,
-> `.webapp`, `.app`, `.nativelib`) estão descritos em [Package](./package.md).
+> `.webapp`, `.desktopapp`, `.app`, `.nativelib`) estão descritos em
+> [Package](./package.md).
 > Nem todo package gera um executável: bibliotecas (`.lib`) são consumidas por
 > outros packages e não aparecem em `applications.json`.
 

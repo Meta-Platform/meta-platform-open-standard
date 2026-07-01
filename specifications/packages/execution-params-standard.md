@@ -342,7 +342,7 @@ por posição na árvore nem por caminho de arquivo.
 
 ## Object loaders oficiais
 
-Os seis object loaders oficiais (registrados pelo Package Executor e implementados em
+Os sete object loaders oficiais (registrados pelo Package Executor e implementados em
 `EssentialTaskLoaders.layer`). Para descrição detalhada, ver
 [Tipos de Object Loader](../../concepts/tipos-de-object-loader.md).
 
@@ -354,6 +354,7 @@ Os seis object loaders oficiais (registrados pelo Package Executor e implementad
 | `service-instance` | Instancia um serviço dentro de uma aplicação. | `tag`, `path`, `serviceParameterNames` (+ params) | `nodejsPackageHandler` (+ bound params) | sim | não¹ |
 | `endpoint-instance` | Monta um endpoint HTTP. | `url`, `type` (+ params) | `nodejsPackageHandler` (+ bound params) | sim | não¹ |
 | `command-application` | Instancia uma aplicação de linha de comando (CLI). | `startupParams`, `namespace`, `rootPath`, `commands`, `executableName`, `commandLineArgs`, `commandParameterNames` | `nodejsPackageHandler` (+ bound params) | sim | não |
+| `desktop-window-instance` | Abre uma janela Electron. Modo primário: `loadURL` para uma app web local que sobe junto (backend + webgui). Modo alternativo: `loadFile` para HTML estático. | `url` (loadURL) **ou** `file`/`rootPath` (loadFile) + `namespace` (+ `title`, `width`, `height`) | `serverService` (loadURL) | sim (loadURL) | não |
 
 ¹ Gerados como **filhos** de `application-instance`, não como itens do array raiz.
 
@@ -371,6 +372,20 @@ Observações:
 - A escolha entre `application-instance` e `command-application` é feita pelo gerador:
   com `boot`, usa `application-instance`; com executáveis **e** um `executableName`
   solicitado, usa `command-application`.
+- **`desktop-window-instance`** dá suporte aos packages `.desktopapp`: cada entrada
+  da seção `windows` do `boot.json` vira uma task. No **modo primário** (`loadURL`), a
+  janela aponta para uma app web local que sobe junto no mesmo plano (os `services` e
+  `endpoints` que sobem o backend HTTP e o webgui, compilado em runtime); o parâmetro
+  `url` recebe um valor inteiro via template (ex.: `"url": "{{windowUrl}}"`, onde
+  `windowUrl` é uma startup-param como `http://localhost:8083/`) — interpolação
+  embutida na string **não** é suportada. A janela espera o serviço `@@/server-service`
+  ficar `ACTIVE` (via `linkedParameters.serverService` + `agentLinkRules`, gerados a
+  partir do `bound-param` `serverService`) e reintenta o load enquanto o webgui compila.
+  No **modo alternativo** (`loadFile`), a janela carrega HTML estático do disco via
+  `BrowserWindow.loadFile` (sem servidor HTTP), podendo o conteúdo vir de outro package
+  (via `dependency` na janela), resolvido em `rootPath`. Em ambos os modos, a task
+  permanece `ACTIVE` enquanto a janela estiver aberta e **encerra o plano de execução**
+  ao ser fechada.
 
 ## Status de task
 
@@ -600,6 +615,44 @@ para clareza. Todo JSON é válido e não contém comentários.
   ]
 }
 ```
+
+### `desktop-window-instance` (exemplo simplificado)
+
+Modo primário (`loadURL`) — o `api-designer.desktopapp` roda a mesma app web do
+`api-designer.webapp` (mesmos `services`/`endpoints`) dentro de uma janela Electron,
+na porta `8083`, esperando o `@@/server-service` ficar `ACTIVE`:
+
+```json
+{
+  "objectLoaderType": "desktop-window-instance",
+  "staticParameters": { "title": "API Designer", "url": "http://localhost:8083/", "width": 1280, "height": 800 },
+  "linkedParameters": { "serverService": "@@/server-service" },
+  "agentLinkRules": [ { "referenceName": "@@/server-service", "requirement": { "&&": [ { "property": "params.tag", "=": "@@/server-service" }, { "property": "status", "=": "ACTIVE" } ] } } ]
+}
+```
+
+> No modo `loadURL`, `url` é um valor inteiro (template `{{windowUrl}}` de uma
+> startup-param); interpolação embutida na string não é suportada.
+
+Modo alternativo (`loadFile`) — carrega HTML estático do disco (sem servidor HTTP):
+
+```json
+{
+  "objectLoaderType": "desktop-window-instance",
+  "staticParameters": {
+    "title": "Static App",
+    "file": "dist/index.html",
+    "width": 1280,
+    "height": 800,
+    "namespace": "@/static-app.desktopapp",
+    "rootPath": "/absolute/path/to/static-app.webgui"
+  }
+}
+```
+
+> `file` é relativo ao package que fornece o conteúdo; `rootPath` é a raiz resolvida
+> desse package (o próprio `.desktopapp` ou o package indicado por `dependency` na
+> janela do `boot.json`).
 
 ### Exemplo inválido
 

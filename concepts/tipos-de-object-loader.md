@@ -30,6 +30,7 @@ e **task loader** (a função que o implementa) são usados de forma intercambi�
 | `service-instance` | Instancia um serviço dentro de uma aplicação. | [↓](#service-instance) |
 | `endpoint-instance` | Monta um endpoint HTTP (controller ou interface web). | [↓](#endpoint-instance) |
 | `command-application` | Instancia uma aplicação de linha de comando (CLI). | [↓](#command-application) |
+| `desktop-window-instance` | Abre uma janela Electron carregando conteúdo HTML local. | [↓](#desktop-window-instance) |
 
 ## Contrato e ciclo de vida (visão de implementação)
 
@@ -259,5 +260,60 @@ solicitado e, ao terminar, encerra o plano de execução (`FINISHED` +
     "nodejsPackageHandler": "@/repository-manager.cli"
   },
   "agentLinkRules": [ ... ]
+}
+```
+
+---
+
+# `desktop-window-instance`
+
+Abre uma **janela [Electron](https://www.electronjs.org/)** durante a execução de
+um plano. É o object loader que dá suporte aos packages do tipo
+[`.desktopapp`](../concepts/package.md): cada entrada da seção `windows` do
+`boot.json` vira uma task `desktop-window-instance`. A task permanece `ACTIVE`
+enquanto a janela estiver aberta e encerra o plano de execução ao ser fechada.
+
+Suporta dois modos:
+- **`loadURL`** (`url`): a janela aponta para uma aplicação web **local** — o
+  cenário típico é um `.desktopapp` que sobe o próprio webapp (`services` +
+  `endpoints`) e abre a janela em `http://localhost:{port}/`. Via `agentLinkRules`
+  (a partir do `bound-param` do serviço), a janela só abre quando o
+  `@@/server-service` está `ACTIVE`, e reintenta o load enquanto o webgui ainda
+  está compilando.
+- **`loadFile`** (`file`, opcionalmente com `dependency`): carrega um HTML
+  **local** do package indicado — para conteúdo estático autossuficiente.
+
+> O binário do Electron é uma dependência do package que implementa este loader
+> (`desktop-window-instance.lib`), instalada em runtime como qualquer dependência.
+
+**Parâmetros:**
+- `url` (string — modo loadURL): URL a carregar (ex.: `http://localhost:8083/`).
+- `file` (string — modo loadFile): HTML a carregar, relativo à raiz do package de conteúdo.
+- `rootPath` (string — modo loadFile): raiz resolvida do package de conteúdo.
+- `title` (string — opcional): Título da janela.
+- `width` / `height` (number — opcional): Dimensões iniciais da janela.
+
+**Exemplo no execution params (modo loadURL — `api-designer.desktopapp`):**
+```json
+{
+  "objectLoaderType": "desktop-window-instance",
+  "staticParameters": {
+    "title": "API Designer",
+    "url": "http://localhost:8083/",
+    "width": 1280,
+    "height": 800
+  },
+  "linkedParameters": { "serverService": "@@/server-service" },
+  "agentLinkRules": [
+    {
+      "referenceName": "@@/server-service",
+      "requirement": {
+        "&&": [
+          { "property": "params.tag", "=": "@@/server-service" },
+          { "property": "status", "=": "ACTIVE" }
+        ]
+      }
+    }
+  ]
 }
 ```

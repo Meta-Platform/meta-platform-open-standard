@@ -25,7 +25,7 @@ supervisão:
 
 | Campo | Descrição |
 |-------|-----------|
-| `appType` | Tipo do executável. Valores observados nos repositórios oficiais: `CLI`, `APP`. |
+| `appType` | Tipo do executável. Valores observados nos repositórios oficiais: `CLI`, `APP`, `DESKTOP` (aplicação desktop Electron, `.desktopapp`). |
 | `executable` | Nome do comando instalado em `EcosystemData/executables/` (precisa estar no `PATH`). |
 | `packageNamespace` | Caminho do package a partir do Module (`Module/Layer/[Group/]Package`). Pode atravessar um `*.group`. |
 | `supervisorSocketFileName` | Nome do [supervisor socket](./supervisor-socket-standard.md) criado em `EcosystemData/supervisor-sockets/`. |
@@ -57,4 +57,5 @@ arquivos `sources.json` e `repositories.json` do ecossistema instalado estão em
   (publica `repo`, `supervisor`, `mytoolkit`).
 - `ecosystem-core-repository` — publica `executor-manager`, `executor`,
   `explorer`, `eco-panel`, `executor-panel`, `mypkg`, `run`.
-- `applications-repository` — publica `api`, `developer`, `sources`.
+- `applications-repository` — publica `api-designer-webapp` (APP),
+  `api-designer-desktop` (DESKTOP), `developer`, `sources`.
