@@ -8,7 +8,7 @@
 
 Um **Repository** (repositório) é a **unidade distribuível e versionável** que
 agrupa [packages](./package.md) do Meta Platform. Tipicamente é um repositório
-Git, instalável em um [Ecosystem](#) a partir de uma **fonte** (`source`).
+Git, instalável em um [Ecosystem](../specifications/ecosystem-data-directory-hierarchy-standard.md) a partir de uma **fonte** (`source`).
 
 Um Repository **não é um projeto isolado**: ele é uma peça de um ecossistema. Os
 seus packages se referenciam entre si e referenciam packages de **outros

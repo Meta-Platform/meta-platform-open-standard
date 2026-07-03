@@ -36,7 +36,7 @@ ecosystem-root/
 
 * **supervisor-sockets**: todo processo iniciado pelo *package-executor* pode criar um socket de supervisão, por meio do qual é possível realizar comunicação binária com o processo via gRPC. Atualmente, as seguintes operações são suportadas: `KillInstance`, `GetStartupArguments`, `GetProcessInformation`, `GetStatus`, `ListTasks`, `GetTask`, `LogStreaming` e `StatusChangeNotification`.
 
-* **executables**: diretório onde ficam todos os executáveis que fazem parte do ecossistema e que foram instalados pelo *myrepo* ou pelo *wizard*. Nele, encontram-se aplicações, Web APIs e CLIs disponíveis para uso, de forma equivalente ao diretório `\bin`. Uma observação importante é que o diretório **executables** deve estar presente na variável de ambiente `PATH`, para que o usuário consiga utilizar as ferramentas do ecossistema.
+* **executables**: diretório onde ficam todos os executáveis que fazem parte do ecossistema e que foram instalados pela CLI `repo` (`repository-manager.cli`) ou pelo *wizard* (`mywizard`). Nele, encontram-se aplicações, Web APIs e CLIs disponíveis para uso, de forma equivalente ao diretório `\bin`. Uma observação importante é que o diretório **executables** deve estar presente na variável de ambiente `PATH`, para que o usuário consiga utilizar as ferramentas do ecossistema.
 
 * **repos**: contém todos os repositórios instalados no ecossistema.
 

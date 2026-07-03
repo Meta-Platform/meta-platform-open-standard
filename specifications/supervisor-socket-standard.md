@@ -28,13 +28,19 @@ arquivo de socket de cada executável é definido em `applications.json`
 ## Ciclo de vida
 
 1. Ao ser iniciado com `--supervisorSocket <caminho>`, o package-executor cria o
-   servidor gRPC e faz `bind` no socket Unix.
-2. Se o caminho usar o prefixo `unix:`, o arquivo de socket anterior é removido
-   antes do `bind` (limpeza de socket órfão).
-3. Enquanto o processo vive, clientes (ex.: CLI `supervisor`) conectam para
+   servidor gRPC e faz `bind` no socket Unix. O prefixo `unix:` é obrigatório para
+   que o transporte seja tratado como socket Unix (sem ele, a limpeza de socket e
+   a supervisão não são ativadas).
+2. Enquanto o processo vive, clientes (ex.: CLI `supervisor`) conectam para
    consultar status, listar/inspecionar tasks, fazer streaming de log e encerrar
    a instância.
-4. Ao encerrar, o arquivo de socket é removido (shutdown handler).
+3. Ao encerrar de forma limpa, o arquivo de socket é removido pelos *shutdown
+   handlers* (`exit`, `SIGINT`, `SIGTERM`, `uncaughtException`).
+
+> **Socket órfão:** a implementação de referência **não** remove o socket antes
+> do `bind`. Se o processo anterior morreu sem executar os handlers (ex.:
+> `kill -9`), o arquivo de socket permanece e um novo `bind` no mesmo caminho
+> falha — nesse caso é preciso remover o `.sock` manualmente.
 
 ## Cliente de referência
 

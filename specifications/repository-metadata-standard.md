@@ -39,11 +39,16 @@ supervisão:
 Um repositório é descoberto/instalado a partir de uma **fonte** registrada no
 `sources.json` do ecossistema:
 
-| `sourceType` | Origem | Parâmetros |
-|--------------|--------|-----------|
-| `LOCAL_FS` | Sistema de arquivos local | `localPath` |
-| `GITHUB_RELEASE` | Release do GitHub | `repoOwner`, `repoName` |
-| `GOOGLE_DRIVE` | `.tar.gz` no Google Drive | `fileId` |
+| `sourceType` | Origem | Campos persistidos | Argumentos da CLI `repo register source` |
+|--------------|--------|--------------------|-------------------------------------------|
+| `LOCAL_FS` | Sistema de arquivos local | `path` | `--localPath` |
+| `GITHUB_RELEASE` | Release do GitHub | `repositoryOwner`, `repositoryName` | `--repoOwner`, `--repoName` |
+| `GOOGLE_DRIVE` | `.tar.gz` no Google Drive | `fileId` | `--fileId` |
+
+> Os nomes dos **campos persistidos** no `sources.json` (`path`,
+> `repositoryOwner`/`repositoryName`, `fileId`) diferem dos **argumentos da CLI**
+> (`--localPath`, `--repoOwner`/`--repoName`): a CLI converte os argumentos para os
+> campos ao registrar a fonte.
 
 A gestão é feita pela CLI `repo` (`repository-manager.cli`) e pelo
 [Setup Wizard](https://github.com/Meta-Platform/meta-platform-setup-wizard-command-line)

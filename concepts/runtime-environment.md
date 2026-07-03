@@ -27,11 +27,12 @@ repository-manager.cli-e9766fee7f2d40e9c498cabb6c06a9581236c7ba9d1310999b5e24d1d
 | `execution-params.json` | O **plano de execução**: as unidades a executar (object loaders) e suas interdependências, consumido pelo [Task Executor](../specifications/environment-runtime-standard.md). |
 | `.dependencies/node_modules` | As dependências Node.js instaladas para o ambiente. |
 
-Os nomes desses arquivos/diretórios vêm de
+Os nomes de `metadata-hierarchy.json` e do diretório de dependências vêm de
 [`ecosystem-defaults.json`](../specifications/metadados/ecosystem-defaults.json)
-(`ECOSYSTEMDATA_CONF_FILENAME_PKG_GRAPH_DATA`,
-`ECOSYSTEMDATA_CONF_FILENAME_EXECUTION_PLAN_DATA`,
-`EXECUTIONDATA_CONF_DIRNAME_DEPENDENCIES`).
+(`ECOSYSTEMDATA_CONF_FILENAME_PKG_GRAPH_DATA` e
+`EXECUTIONDATA_CONF_DIRNAME_DEPENDENCIES`). Na implementação de referência atual,
+o nome `execution-params.json` é **fixo no código** (não lido do
+`ecosystem-defaults.json`).
 
 ## Como é criado (fluxo)
 

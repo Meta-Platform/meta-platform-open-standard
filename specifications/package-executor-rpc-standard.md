@@ -34,6 +34,10 @@ ciclo de vida) está em [Supervisor Socket Standard](./supervisor-socket-standar
 | `RUNNING` | 3 | Em execução. |
 | `ERROR` | 4 | Em erro. |
 
+> **Nota de implementação:** o valor `ERROR` faz parte do contrato, mas a
+> implementação de referência atual **não o emite** — o handler de erro reporta
+> `RUNNING` em vez de `ERROR`.
+
 ### `TaskStatus`
 
 | Valor | # | Significado |
@@ -54,6 +58,11 @@ ciclo de vida) está em [Supervisor Socket Standard](./supervisor-socket-standar
 `packagePath`, `startupJsonFilePath`, `ecosystemDefaultJsonFilePath`,
 `nodejsProjectDependenciesPath`, `verbose` (bool), `supervisorSocketPath`,
 `executableName`, `commandLineArgs`, `ecosystemDataPath`.
+
+> **Nota de implementação:** o campo `nodejsProjectDependenciesPath` faz parte do
+> contrato, mas a implementação de referência atual monta a resposta com a chave
+> `nodejsProjectDependencies` (sem `Path`), de modo que o campo do proto fica
+> vazio.
 
 ### `ProcessInformationResponse`
 `pid` (int32), `platform` (string), `arch` (string).
