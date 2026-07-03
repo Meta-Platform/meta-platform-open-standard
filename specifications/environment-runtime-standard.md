@@ -43,6 +43,7 @@ layer `EssentialTaskLoaders.layer`):
 | `service-instance` | `service-instance.lib` | Instancia um serviço. |
 | `endpoint-instance` | `endpoint-instance.lib` | Monta um endpoint HTTP / interface web. |
 | `command-application` | `command-application.lib` | Instancia uma aplicação de linha de comando. |
+| `desktop-window-instance` | `desktop-window-instance.lib` | Abre uma janela Electron para packages `.desktopapp` (`loadURL`/`loadFile`). |
 
 Detalhes e exemplos de parâmetros em
 [Tipos de Object Loader](../concepts/tipos-de-object-loader.md). Para o passo a

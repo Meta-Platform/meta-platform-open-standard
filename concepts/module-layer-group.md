@@ -44,10 +44,10 @@ reais: `Application.layer`, `Libraries.layer`, `PlatformLibraries.layer`,
 ## Group (`*.group`)
 
 Agrupa os packages que, **juntos, formam uma aplicação completa**. É comum uma
-aplicação web ser composta por três packages no mesmo group — por exemplo
-`APIDesigner.group`: `api-designer.webapp`, `api-designer.webgui` e
-`api-designer.webservice`. O Group é **opcional**: packages independentes ficam
-direto na Layer.
+aplicação web ser composta por vários packages no mesmo group — por exemplo
+`APIDesigner.group`, com quatro: `api-designer.webapp`, `api-designer.webgui`,
+`api-designer.webservice` e `api-designer.desktopapp`. O Group é **opcional**:
+packages independentes ficam direto na Layer.
 
 ## Por que essa hierarquia importa
 

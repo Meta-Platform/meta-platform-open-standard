@@ -19,13 +19,15 @@ O sufixo do nome da pasta determina o tipo do package. O conjunto canônico de
 tipos é definido em
 [`ecosystem-defaults.json`](../specifications/metadados/ecosystem-defaults.json)
 na chave `REPOS_CONF_EXTLIST_PKG_TYPE`
-(`app|cli|webapp|desktopapp|webgui|webservice|service|lib`), acrescido do tipo
-`nativelib` para bibliotecas nativas:
+(`app|cli|webapp|desktopapp|webgui|webservice|service|lib`). O tipo `.nativelib`
+(bibliotecas nativas) é **experimental**: aparece nos repositórios de laboratório,
+mas ainda **não** está em `REPOS_CONF_EXTLIST_PKG_TYPE` e, portanto, não é
+reconhecido pela descoberta de packages da implementação de referência.
 
 | Sufixo | Tipo | Descrição |
 |--------|------|-----------|
 | `.lib` | Library | Biblioteca reutilizável (JavaScript). |
-| `.nativelib` | Native library | Biblioteca nativa (addon C++/Rust via `binding.gyp`/`Cargo.toml`). |
+| `.nativelib` | Native library (experimental) | Biblioteca nativa (addon C++/Rust via `binding.gyp`/`Cargo.toml`). **Experimental**: fora de `REPOS_CONF_EXTLIST_PKG_TYPE`; não descoberto como package pela implementação atual. |
 | `.cli` | Command-line | Aplicação de linha de comando; expõe um executável. |
 | `.service` | Service | Serviço de back-end de longa duração. |
 | `.webservice` | Web service | Serviço HTTP / API. |

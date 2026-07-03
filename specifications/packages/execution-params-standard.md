@@ -354,9 +354,10 @@ Os sete object loaders oficiais (registrados pelo Package Executor e implementad
 | `service-instance` | Instancia um serviço dentro de uma aplicação. | `tag`, `path`, `serviceParameterNames` (+ params) | `nodejsPackageHandler` (+ bound params) | sim | não¹ |
 | `endpoint-instance` | Monta um endpoint HTTP. | `url`, `type` (+ params) | `nodejsPackageHandler` (+ bound params) | sim | não¹ |
 | `command-application` | Instancia uma aplicação de linha de comando (CLI). | `startupParams`, `namespace`, `rootPath`, `commands`, `executableName`, `commandLineArgs`, `commandParameterNames` | `nodejsPackageHandler` (+ bound params) | sim | não |
-| `desktop-window-instance` | Abre uma janela Electron. Modo primário: `loadURL` para uma app web local que sobe junto (backend + webgui). Modo alternativo: `loadFile` para HTML estático. | `url` (loadURL) **ou** `file`/`rootPath` (loadFile) + `namespace` (+ `title`, `width`, `height`) | `serverService` (loadURL) | sim (loadURL) | não |
+| `desktop-window-instance` | Abre uma janela Electron. Modo primário: `loadURL` para uma app web local que sobe junto (backend + webgui). Modo alternativo: `loadFile` para HTML estático. | `url` (loadURL) **ou** `file`/`rootPath` (loadFile) + `namespace` (+ `title`, `width`, `height`) | `serverService` (loadURL) | sim (loadURL) | não¹ |
 
-¹ Gerados como **filhos** de `application-instance`, não como itens do array raiz.
+¹ Gerados como **filhos** de `application-instance` (as entradas de `services`,
+`endpoints` e `windows` do `boot.json`), não como itens do array raiz.
 
 Observações:
 
@@ -384,8 +385,10 @@ Observações:
   No **modo alternativo** (`loadFile`), a janela carrega HTML estático do disco via
   `BrowserWindow.loadFile` (sem servidor HTTP), podendo o conteúdo vir de outro package
   (via `dependency` na janela), resolvido em `rootPath`. Em ambos os modos, a task
-  permanece `ACTIVE` enquanto a janela estiver aberta e **encerra o plano de execução**
-  ao ser fechada.
+  permanece `ACTIVE` enquanto a janela estiver aberta; ao ser fechada (processo
+  Electron encerrado), o loader emite `TERMINATED` **para a própria task**. O
+  encerramento de todo o plano (`STOP_ALL_TASKS`) cabe ao `command-application`,
+  não a este loader.
 
 ## Status de task
 
@@ -715,4 +718,3 @@ de `children`. Ver [Pendências e extensões futuras](#pendências-e-extensões-
 - **Exemplos reais versionados** de `execution-params.json` (saída de execuções reais).
 - **Documentação mais detalhada por task loader** (parâmetros completos de cada loader).
 - **Validação automatizada** entre os object loaders registrados e esta especificação.
-</content>

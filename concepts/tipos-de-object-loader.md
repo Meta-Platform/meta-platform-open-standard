@@ -87,11 +87,14 @@ Define uma instância de serviço dentro de uma aplicação.
 - `tag` (string): Identificador único do serviço (ex: `"@@/server-service"`)
 - `name` (string - opcional): Nome do serviço
 - `port` (string - opcional): Porta ou socket do serviço
-- `path` (string): Caminho relativo ao arquivo do serviço
+- `path` (string): Caminho do arquivo do serviço, resolvido via `nodejsPackageHandler`
+- `localPath` (string - alternativa a `path`): Caminho carregado por `require`
+  direto (sem `nodejsPackageHandler`); usado quando o serviço não vem de um
+  package resolvido
 - `serviceParameterNames` (array): Lista de nomes de parâmetros esperados
 - `serviceStorageFilePath` (string - opcional): Caminho do banco de dados
 - `instanceDataDirPath` (string - opcional): Diretório de dados da instância
-- `nodejsPackageHandler` (string): Referência ao pacote Node.js
+- `nodejsPackageHandler` (string): Referência ao pacote Node.js (usado com `path`)
 
 **Exemplo no execution params:**
 ```json
@@ -271,7 +274,10 @@ Abre uma **janela [Electron](https://www.electronjs.org/)** durante a execução
 um plano. É o object loader que dá suporte aos packages do tipo
 [`.desktopapp`](../concepts/package.md): cada entrada da seção `windows` do
 `boot.json` vira uma task `desktop-window-instance`. A task permanece `ACTIVE`
-enquanto a janela estiver aberta e encerra o plano de execução ao ser fechada.
+enquanto a janela estiver aberta; quando o processo Electron sai (janela fechada),
+o loader emite `TERMINATED` para a **própria task**. O encerramento do plano
+inteiro (`STOP_ALL_TASKS`) é responsabilidade do `command-application`, não deste
+loader.
 
 Suporta dois modos:
 - **`loadURL`** (`url`): a janela aponta para uma aplicação web **local** — o

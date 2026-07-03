@@ -94,21 +94,31 @@ Lista os serviços expostos por um package de serviços. Cada entrada:
 
 ## `endpoint-group.json` — packages web
 
-Presente em `.webgui`/`.webservice`/`.webapp`; descreve o grupo de endpoints
-(controllers/APIs/interface) que o package monta sobre um `@@/server-service`.
+Presente em `.webgui`/`.webservice` e nos `.app` que expõem endpoints; descreve o
+grupo de endpoints (controllers/APIs/interface) que o package monta sobre um
+`@@/server-service`. **Não** aparece em `.webapp` (o `.webapp` compõe seus
+serviços/endpoints pelo `boot.json`).
 
 ## `startup-params.json` — opcional
 
 Valores de inicialização específicos do package, entregues aos handlers como
 `startupParams` (ex.: `{ "installDataDirPath": "~/EcosystemData" }`).
 
+## `startup-params-schema.json` — opcional
+
+Presente na maioria dos packages de aplicação/web (`.webapp`, `.webgui`,
+`.webservice`, `.app`, `.desktopapp`), acompanha o `startup-params.json`. Descreve
+o schema dos parâmetros de inicialização (reservado para tooling; sem consumidor no
+runtime de referência atual).
+
 ## Resumo por tipo
 
 | Arquivo | `.lib` | `.cli` | `.service` | `.app`/`.webapp`/`.webgui`/`.webservice` | `.desktopapp` |
 |---------|:------:|:------:|:----------:|:----------------------------------------:|:-------------:|
 | `package.json` (namespace) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `boot.json` | — | ✅ | ✅ (services) | ✅ (params/services/endpoints) | ✅ (windows) |
+| `boot.json` | — | ✅ | — | ✅ (params/services/endpoints) | ✅ (windows) |
 | `command-group.json` | — | ✅ | — | — | — |
 | `services.json` | — | — | ✅ | — | — |
-| `endpoint-group.json` | — | — | — | ✅ (web) | — |
+| `endpoint-group.json` | — | — | — | ✅ (`.webgui`/`.webservice`/`.app` com endpoints; **não** `.webapp`) | — |
 | `startup-params.json` | — | opc. | opc. | opc. | opc. |
+| `startup-params-schema.json` | — | — | — | opc. (maioria) | opc. |
