@@ -101,8 +101,17 @@ serviços/endpoints pelo `boot.json`).
 
 ## `startup-params.json` — opcional
 
-Valores de inicialização específicos do package, entregues aos handlers como
+Valores de inicialização **específicos do package**, entregues aos handlers como
 `startupParams` (ex.: `{ "installDataDirPath": "~/EcosystemData" }`).
+
+> **Contrato:** o `startup-params.json` guarda apenas o que é específico do
+> package (`port`, `serverName`, `socket`, caminhos próprios, ...). As variáveis
+> de configuração do ecossistema definidas em `ecosystem-defaults.json`
+> (`REPOS_CONF_*`, `PKG_CONF_*`, `ECOSYSTEMDATA_CONF_*`, `EXECUTIONDATA_CONF_*`)
+> **não** devem ser copiadas aqui: o executor (`pkg-exec`) injeta o
+> `ecosystem-defaults` como base do `startupParams` na execução, então os
+> `{{VAR}}` referenciados no `boot.json` resolvem por **herança**. Copiar essas
+> variáveis dessincroniza o package do ecossistema quando um default muda.
 
 ## `startup-params-schema.json` — opcional
 
