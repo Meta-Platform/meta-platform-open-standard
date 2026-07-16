@@ -19,10 +19,10 @@ O sufixo do nome da pasta determina o tipo do package. O conjunto canônico de
 tipos é definido em
 [`ecosystem-defaults.json`](../specifications/metadados/ecosystem-defaults.json)
 na chave `REPOS_CONF_EXTLIST_PKG_TYPE`
-(`app|cli|webapp|desktopapp|webgui|webservice|service|lib`). O tipo `.nativelib`
-(bibliotecas nativas) é **experimental**: aparece nos repositórios de laboratório,
-mas ainda **não** está em `REPOS_CONF_EXTLIST_PKG_TYPE` e, portanto, não é
-reconhecido pela descoberta de packages da implementação de referência.
+(`app|cli|webapp|desktopapp|webgui|webservice|service|lib|taskLoader`). O tipo
+`.nativelib` (bibliotecas nativas) é **experimental**: aparece nos repositórios de
+laboratório, mas ainda **não** está em `REPOS_CONF_EXTLIST_PKG_TYPE` e, portanto,
+não é reconhecido pela descoberta de packages da implementação de referência.
 
 | Sufixo | Tipo | Descrição |
 |--------|------|-----------|
@@ -35,6 +35,7 @@ reconhecido pela descoberta de packages da implementação de referência.
 | `.webapp` | Web application | Aplicação web (webgui + webservice integrados). |
 | `.desktopapp` | Desktop application | Aplicação desktop nativa; abre uma ou mais janelas [Electron](https://www.electronjs.org/). Tipicamente encapsula uma app web local que sobe junto (`loadURL`); também suporta HTML local (`loadFile`). |
 | `.app` | Application | Aplicação/instância do ecossistema. |
+| `.taskLoader` | Task loader (object loader) | Implementa um [object loader](./tipos-de-object-loader.md) — sabe instanciar um tipo de unidade do plano de execução. Vive no `Taskloaders.Module` do repositório e é declarado em [`taskloaders.json`](../specifications/repository-metadata-standard.md). |
 
 ## Identidade e dependências por namespace
 

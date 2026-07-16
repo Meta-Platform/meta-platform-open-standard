@@ -17,10 +17,18 @@ ou rodar uma CLI.
 
 Cada unidade do `execution-params.json` declara um campo **`objectLoaderType`**
 (uma string) que identifica qual object loader deve carregá-la. Na implementação
-de referência, cada `objectLoaderType` é resolvido por uma biblioteca *task loader*
-no [essential-repository](https://github.com/Meta-Platform/meta-platform-essential-repository)
-(layer `EssentialTaskLoaders.layer`). Por isso os termos **object loader** (o tipo)
-e **task loader** (a função que o implementa) são usados de forma intercambiável.
+de referência, cada `objectLoaderType` é resolvido por um package do tipo
+**[`.taskLoader`](./package.md)** — que vive no `Taskloaders.Module` do repositório
+(no [essential-repository](https://github.com/Meta-Platform/meta-platform-essential-repository),
+em `Taskloaders.Module/Loaders.layer`) e é declarado no
+[`taskloaders.json`](../specifications/repository-metadata-standard.md) do repositório
+(com o `objectLoaderType`, o package que o implementa e as dependências npm que ele
+exige). Por isso os termos **object loader** (o tipo) e **task loader** (o package/função
+que o implementa) são usados de forma intercambiável.
+
+> Historicamente esses loaders eram packages `.lib` na layer `EssentialTaskLoaders.layer`;
+> passaram a ser packages do tipo `.taskLoader` reunidos no `Taskloaders.Module`. A
+> chave `objectLoaderType` permanece a mesma — mudou apenas o tipo/local do package.
 
 | `objectLoaderType` | Papel | Detalhado em |
 |--------------------|-------|--------------|

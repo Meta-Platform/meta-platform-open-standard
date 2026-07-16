@@ -34,6 +34,56 @@ supervisão:
 > liga **o comando que o usuário roda** → **o package que será executado** → **o
 > socket pelo qual o processo é supervisionado**.
 
+## `metadata/repository.json`
+
+Declara a **identidade e as capacidades** que o repositório publica para o
+ecossistema: seu namespace, de quais repositórios ele depende e quais tipos de
+package ele habilita.
+
+```json
+{
+    "namespace": "EcosystemCoreRepo",
+    "dependencies": ["EssentialRepo"],
+    "supportedPackageTypes": ["webapp", "webgui", "webservice"]
+}
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `namespace` | Namespace do repositório (a mesma chave usada em `sources.json`/`repositories.json`). Ex.: `EssentialRepo`, `EcosystemCoreRepo`, `PlatformApplicationsRepo`. |
+| `dependencies` | Lista de namespaces de repositórios dos quais este depende. Ex.: `EcosystemCoreRepo` depende de `EssentialRepo`; `PlatformApplicationsRepo` de `EssentialRepo` + `EcosystemCoreRepo`. |
+| `supportedPackageTypes` | Tipos de package que este repositório **habilita** no ecossistema. `EssentialRepo` habilita `app/cli/service/lib`; `EcosystemCoreRepo` acrescenta `webapp/webgui/webservice`; `PlatformApplicationsRepo` acrescenta `desktopapp`. |
+
+## `metadata/taskloaders.json`
+
+Declara os [object loaders](../concepts/tipos-de-object-loader.md) (packages
+`.taskLoader`) que o repositório **fornece**, com as dependências npm que cada um
+exige em runtime:
+
+```json
+{
+    "taskLoaders": [
+        {
+            "objectLoaderType": "endpoint-instance",
+            "package": "@/endpoint-instance.taskLoader",
+            "entry": "src/EndpointInstance.taskLoader",
+            "npmDependencies": { "webpack": "^5.102.1", "html-webpack-plugin": "^5.6.4", "colors": "^1.4.0" }
+        }
+    ]
+}
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `objectLoaderType` | A string que identifica o loader no `execution-params.json` (ex.: `endpoint-instance`). |
+| `package` | Namespace do package `.taskLoader` que implementa o loader (ex.: `@/endpoint-instance.taskLoader`). |
+| `entry` | Caminho do módulo de entrada dentro do package (ex.: `src/EndpointInstance.taskLoader`). |
+| `npmDependencies` | Pacotes npm que o loader precisa; a implementação combina os `npmDependencies` de todos os taskloaders instalados no diretório de dependências do ecossistema. |
+
+> Repositórios sem loaders próprios declaram `"taskLoaders": []`. Os 7 loaders da
+> implementação de referência ficam no `EssentialRepo`
+> (`Taskloaders.Module/Loaders.layer/*.taskLoader`).
+
 ## Fontes (`sources.json`) e instalação
 
 Um repositório é descoberto/instalado a partir de uma **fonte** registrada no
