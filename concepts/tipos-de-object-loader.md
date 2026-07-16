@@ -18,27 +18,39 @@ ou rodar uma CLI.
 Cada unidade do `execution-params.json` declara um campo **`objectLoaderType`**
 (uma string) que identifica qual object loader deve carregá-la. Na implementação
 de referência, cada `objectLoaderType` é resolvido por um package do tipo
-**[`.taskLoader`](./package.md)** — que vive no `Taskloaders.Module` do repositório
-(no [essential-repository](https://github.com/Meta-Platform/meta-platform-essential-repository),
-em `Taskloaders.Module/Loaders.layer`) e é declarado no
-[`taskloaders.json`](../specifications/repository-metadata-standard.md) do repositório
-(com o `objectLoaderType`, o package que o implementa e as dependências npm que ele
-exige). Por isso os termos **object loader** (o tipo) e **task loader** (o package/função
+**[`.taskLoader`](./package.md)** — que vive no `Taskloaders.Module` de um repositório
+e é declarado no [`taskloaders.json`](../specifications/repository-metadata-standard.md)
+dele. Por isso os termos **object loader** (o tipo) e **task loader** (o package/função
 que o implementa) são usados de forma intercambiável.
 
-> Historicamente esses loaders eram packages `.lib` na layer `EssentialTaskLoaders.layer`;
-> passaram a ser packages do tipo `.taskLoader` reunidos no `Taskloaders.Module`. A
-> chave `objectLoaderType` permanece a mesma — mudou apenas o tipo/local do package.
+### Descoberta dinâmica (registry)
 
-| `objectLoaderType` | Papel | Detalhado em |
-|--------------------|-------|--------------|
-| `install-nodejs-package-dependencies` | Instala as dependências Node.js do package. | [↓](#install-nodejs-package-dependencies) |
-| `nodejs-package` | Carrega o package Node.js e expõe um handler. | [↓](#nodejs-package) |
-| `application-instance` | Instancia uma aplicação completa (com serviços filhos). | [↓](#application-instance) |
-| `service-instance` | Instancia um serviço dentro de uma aplicação. | [↓](#service-instance) |
-| `endpoint-instance` | Monta um endpoint HTTP (controller ou interface web). | [↓](#endpoint-instance) |
-| `command-application` | Instancia uma aplicação de linha de comando (CLI). | [↓](#command-application) |
-| `desktop-window-instance` | Abre uma janela Electron carregando conteúdo HTML local. | [↓](#desktop-window-instance) |
+O mapa `objectLoaderType → loader` **não é hard-coded**: uma lib de registro
+(`taskloader-registry.lib`, no essential) varre os repositórios **instalados**
+(`repositories.json`), lê o `taskloaders.json` de cada um e monta o mapa carregando
+cada loader pelo seu `path`. Assim, **quais loaders existem depende de quais
+repositórios estão instalados** — instalar um repositório passa a adicionar
+capacidades de execução ao ecossistema. Os três consumidores (o `pkg-exec`, o
+`package-runner.cli` e o `task-executor-machine.service` do daemon) usam esse mesmo
+registry.
+
+### Distribuição por capacidade
+
+Os loaders são **distribuídos** conforme a capacidade que o repositório habilita:
+
+| `objectLoaderType` | Repositório | Papel | Detalhado em |
+|--------------------|-------------|-------|--------------|
+| `install-nodejs-package-dependencies` | EssentialRepo | Instala as dependências Node.js do package. | [↓](#install-nodejs-package-dependencies) |
+| `nodejs-package` | EssentialRepo | Carrega o package Node.js e expõe um handler. | [↓](#nodejs-package) |
+| `application-instance` | EssentialRepo | Instancia uma aplicação completa (com serviços filhos). | [↓](#application-instance) |
+| `service-instance` | EssentialRepo | Instancia um serviço dentro de uma aplicação. | [↓](#service-instance) |
+| `command-application` | EssentialRepo | Instancia uma aplicação de linha de comando (CLI). | [↓](#command-application) |
+| `endpoint-instance` | **EcosystemCoreRepo** | Monta um endpoint HTTP (controller ou interface web). | [↓](#endpoint-instance) |
+| `desktop-window-instance` | **PlatformApplicationsRepo** | Abre uma janela Electron. | [↓](#desktop-window-instance) |
+
+> Historicamente esses loaders eram packages `.lib` na layer `EssentialTaskLoaders.layer`
+> do essential; passaram a packages `.taskLoader` no `Taskloaders.Module` e foram
+> redistribuídos. A chave `objectLoaderType` permanece a mesma.
 
 ## Contrato e ciclo de vida (visão de implementação)
 
@@ -48,6 +60,26 @@ iniciar/parar a task e reporta seu status. Os campos comuns do `execution-params
 (`staticParameters`, `linkedParameters`, `agentLinkRules`, `activationRules`,
 `children`) estão no
 [Execution Params Standard](../specifications/packages/execution-params-standard.md).
+
+### Contrato de fábrica (injeção de dependências)
+
+Um loader que vive **fora do essential** (ex.: `endpoint-instance` no
+EcosystemCoreRepo) não pode alcançar por caminho relativo as libs compartilhadas do
+essential (`task-executor.lib`, `smart-require.lib`, …). Para isso o
+`taskloaders.json` marca o loader com **`injectsDeps: true`** e ele passa a ser uma
+**fábrica**:
+
+```js
+module.exports = (runtimeDeps) => (loaderParams, executorChannel) => { /* … */ }
+```
+
+O registry injeta em `runtimeDeps` as dependências resolvidas
+(`TaskStatusTypes`, `CommandChannelEventTypes`, `SmartRequire`, `ComputeObjectHash`,
+`WebInterfaceBuilder`) e, em `runtimeDeps.paths`, **caminhos absolutos** para
+subprocessos que precisam resolver por PATH (o processo Electron do
+`desktop-window-instance` recebe `META_WEB_INTERFACE_BUILDER_PATH` /
+`META_SMART_REQUIRE_PATH` via env). Loaders que permanecem no essential mantêm o
+contrato direto (sem `injectsDeps`).
 
 Para o **passo a passo de como criar um novo object loader / task loader**, veja o
 [Guia: como criar e usar um Object Loader](https://github.com/Meta-Platform/meta-platform-essential-repository/blob/main/Runtime.Module/Executor.layer/task-executor.lib/docs/guia-criar-object-loader.md).
@@ -298,7 +330,8 @@ Suporta dois modos:
   **local** do package indicado — para conteúdo estático autossuficiente.
 
 > O binário do Electron é uma dependência do package que implementa este loader
-> (`desktop-window-instance.lib`), instalada em runtime como qualquer dependência.
+> (`desktop-window-instance.taskLoader`, no PlatformApplicationsRepo), declarada em
+> `npmDependencies` no `taskloaders.json` e instalada em runtime.
 
 **Parâmetros:**
 - `url` (string — modo loadURL): URL a carregar (ex.: `http://localhost:8083/`).

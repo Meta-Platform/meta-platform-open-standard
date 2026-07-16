@@ -38,8 +38,8 @@ observadas nos repositórios oficiais:
 Camada que agrupa packages da **mesma preocupação ou do mesmo tipo**. Exemplos
 reais: `Application.layer`, `Libraries.layer`, `PlatformLibraries.layer`,
 `Utilities.layer`, `Services.layer`, `Webservices.layer`, `Executor.layer`,
-`MetadataHelpers.layer`, `EssentialTaskLoaders.layer`, `Admin.layer`,
-`Tools.layer`.
+`MetadataHelpers.layer`, `Loaders.layer` e `Registry.layer` (do
+`Taskloaders.Module`), `Admin.layer`, `Tools.layer`.
 
 ## Group (`*.group`)
 

@@ -66,8 +66,10 @@ exige em runtime:
         {
             "objectLoaderType": "endpoint-instance",
             "package": "@/endpoint-instance.taskLoader",
+            "path": "Taskloaders.Module/Loaders.layer/endpoint-instance.taskLoader",
             "entry": "src/EndpointInstance.taskLoader",
-            "npmDependencies": { "webpack": "^5.102.1", "html-webpack-plugin": "^5.6.4", "colors": "^1.4.0" }
+            "npmDependencies": { "webpack": "^5.102.1", "html-webpack-plugin": "^5.6.4", "colors": "^1.4.0" },
+            "injectsDeps": true
         }
     ]
 }
@@ -77,12 +79,17 @@ exige em runtime:
 |-------|-----------|
 | `objectLoaderType` | A string que identifica o loader no `execution-params.json` (ex.: `endpoint-instance`). |
 | `package` | Namespace do package `.taskLoader` que implementa o loader (ex.: `@/endpoint-instance.taskLoader`). |
+| `path` | Caminho do package do loader **relativo à raiz do repositório**. É por ele que o registry localiza e carrega o loader (por `require` direto). |
 | `entry` | Caminho do módulo de entrada dentro do package (ex.: `src/EndpointInstance.taskLoader`). |
 | `npmDependencies` | Pacotes npm que o loader precisa; a implementação combina os `npmDependencies` de todos os taskloaders instalados no diretório de dependências do ecossistema. |
+| `injectsDeps` | (opcional) Se `true`, o loader é uma **fábrica** `(runtimeDeps) => (params, executorChannel) => …`: o registry injeta as dependências compartilhadas (do essential/core) em vez de o loader as buscar por caminho relativo. **Necessário para loaders que vivem fora do essential** (ver [tipos-de-object-loader](../concepts/tipos-de-object-loader.md)). |
 
-> Repositórios sem loaders próprios declaram `"taskLoaders": []`. Os 7 loaders da
-> implementação de referência ficam no `EssentialRepo`
-> (`Taskloaders.Module/Loaders.layer/*.taskLoader`).
+> Repositórios sem loaders próprios declaram `"taskLoaders": []`. Os loaders são
+> **distribuídos** conforme a capacidade que o repositório habilita: os básicos
+> (`install-nodejs-package-dependencies`, `nodejs-package`, `command-application`,
+> `application-instance`, `service-instance`) no `EssentialRepo`; `endpoint-instance`
+> (web) no `EcosystemCoreRepo`; `desktop-window-instance` (Electron) no
+> `PlatformApplicationsRepo`.
 
 ## Fontes (`sources.json`) e instalação
 

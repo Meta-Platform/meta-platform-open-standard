@@ -30,20 +30,20 @@ A sequência executada pelo
 
 ## Object loaders
 
-Cada unidade do `execution-params.json` tem um `objectLoaderType`, resolvido por
-um **task loader** correspondente (no
-[essential-repository](https://github.com/Meta-Platform/meta-platform-essential-repository),
-layer `EssentialTaskLoaders.layer`):
+Cada unidade do `execution-params.json` tem um `objectLoaderType`, resolvido por um
+package **`.taskLoader`** correspondente. O mapa é montado **dinamicamente** pelo
+`taskloader-registry.lib` (no essential) a partir do `taskloaders.json` de cada
+repositório instalado — por isso os loaders são **distribuídos** por repositório:
 
-| `objectLoaderType` | Task loader | Papel |
-|--------------------|-------------|-------|
-| `install-nodejs-package-dependencies` | `install-nodejs-package-dependencies.lib` | Instala dependências Node.js do package. |
-| `nodejs-package` | `nodejs-package.lib` | Carrega o package Node.js. |
-| `application-instance` | `application-instance.lib` | Instancia uma aplicação (com serviços filhos). |
-| `service-instance` | `service-instance.lib` | Instancia um serviço. |
-| `endpoint-instance` | `endpoint-instance.lib` | Monta um endpoint HTTP / interface web. |
-| `command-application` | `command-application.lib` | Instancia uma aplicação de linha de comando. |
-| `desktop-window-instance` | `desktop-window-instance.lib` | Abre uma janela Electron para packages `.desktopapp` (`loadURL`/`loadFile`). |
+| `objectLoaderType` | Task loader (package) | Repositório | Papel |
+|--------------------|-----------------------|-------------|-------|
+| `install-nodejs-package-dependencies` | `install-nodejs-package-dependencies.taskLoader` | EssentialRepo | Instala dependências Node.js do package. |
+| `nodejs-package` | `nodejs-package.taskLoader` | EssentialRepo | Carrega o package Node.js. |
+| `application-instance` | `application-instance.taskLoader` | EssentialRepo | Instancia uma aplicação (com serviços filhos). |
+| `service-instance` | `service-instance.taskLoader` | EssentialRepo | Instancia um serviço. |
+| `command-application` | `command-application.taskLoader` | EssentialRepo | Instancia uma aplicação de linha de comando. |
+| `endpoint-instance` | `endpoint-instance.taskLoader` | EcosystemCoreRepo | Monta um endpoint HTTP / interface web. |
+| `desktop-window-instance` | `desktop-window-instance.taskLoader` | PlatformApplicationsRepo | Abre uma janela Electron para packages `.desktopapp` (`loadURL`/`loadFile`/gui-host). |
 
 Detalhes e exemplos de parâmetros em
 [Tipos de Object Loader](../concepts/tipos-de-object-loader.md). Para o passo a

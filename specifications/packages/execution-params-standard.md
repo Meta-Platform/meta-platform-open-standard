@@ -342,8 +342,10 @@ por posição na árvore nem por caminho de arquivo.
 
 ## Object loaders oficiais
 
-Os sete object loaders oficiais (registrados pelo Package Executor e implementados em
-`EssentialTaskLoaders.layer`). Para descrição detalhada, ver
+Os sete object loaders oficiais, resolvidos **dinamicamente** pelo
+`taskloader-registry.lib` a partir dos `taskloaders.json` dos repositórios instalados
+(distribuídos entre EssentialRepo, EcosystemCoreRepo e PlatformApplicationsRepo). Para
+descrição detalhada, ver
 [Tipos de Object Loader](../../concepts/tipos-de-object-loader.md).
 
 | `objectLoaderType` | Papel | `staticParameters` principais | `linkedParameters` | `agentLinkRules` | `children` |
